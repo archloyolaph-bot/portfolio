@@ -2,7 +2,8 @@
 const projects = [
  {id:'01', title:'Tropical Architecture', type:'Climate · Nature · Living', image:'/images/project-1.jpg', images:['/images/project-1.jpg','/images/tropical-4.webp','/images/tropical-2.webp','/images/tropical-3.webp'], description:'Spaces shaped by the tropics. Open to the breeze, connected to greenery, and grounded in natural materials.'},
  {id:'02', title:'High-end Residentials', type:'Privacy · Proportion · Detail', image:'/images/project-2.jpg', images:['/images/project-2.jpg','/images/residential-a1.webp','/images/residential-3.webp','/images/residential-1.webp'], description:'Considered homes that balance privacy with openness, bringing thoughtful spatial planning to everyday life.'},
- {id:'03', title:'Hospitality & Resort Designs', type:'Place · Experience · Escape', image:'/images/project-3.jpg', images:['/images/project-3.jpg','/images/resort-6.webp','/images/resort-5.webp','/images/resort-7.webp','/images/resort-12.webp'], description:'Welcoming destinations where a distinct sense of place meets a thoughtful guest experience and efficient planning.'}
+ {id:'03', title:'Hospitality & Resort Designs', type:'Place · Experience · Escape', image:'/images/project-3.jpg', images:['/images/project-3.jpg','/images/resort-6.webp','/images/resort-5.webp','/images/resort-7.webp','/images/resort-12.webp'], description:'Welcoming destinations where a distinct sense of place meets a thoughtful guest experience and efficient planning.'},
+ {id:'05', title:'Warm & Cozy Interiors', type:'Warmth · Texture · Home', image:'/images/warm-interiors-1.webp', images:['/images/warm-interiors-1.webp','/images/warm-interiors-2.webp','/images/warm-interiors-3.webp','/images/warm-interiors-4.webp'], description:'Warm wood, soft neutral tones, and natural light bring a sense of calm to connected kitchen, dining, and living spaces.'}
 ];
 ---
 <!doctype html>
@@ -16,7 +17,7 @@ const projects = [
  </head>
  <body>
   <a class="skip" href="#main">Skip to content</a>
-  <header><a href="#" class="brand" aria-label="Guillan Loyola home"><span class="brand-name">GUILLAN LOYOLA</span><span class="brand-subtitle">ARCHITECTURE & INTERIOR DESIGN</span></a><nav aria-label="Main navigation"><a href="#work">Selected work <span>03</span></a><a href="#about">About</a><a href="#contact">Let’s connect ↗</a></nav></header>
+  <header><a href="#" class="brand" aria-label="Guillan Loyola home"><span class="brand-name">GUILLAN LOYOLA</span><span class="brand-subtitle">ARCHITECTURE & INTERIOR DESIGN</span></a><nav aria-label="Main navigation"><a href="#work">Selected work <span>{String(projects.length).padStart(2, '0')}</span></a><a href="#about">About</a><a href="#contact">Let’s connect ↗</a></nav></header>
   <main id="main">
    <section class="hero" aria-labelledby="hero-title">
     <div class="eyebrow"><span>INDEPENDENT ARCHITECT</span><span>PORTFOLIO / 2026</span></div>
@@ -24,7 +25,7 @@ const projects = [
     <div class="hero-bottom"><p>Architecture shaped by place,<br />and the people who call it home.</p><a class="round-link" href="#work"><span>Explore selected work</span><b aria-hidden="true">↓</b></a></div>
     <figure class="hero-image"><img src="/images/project-1.jpg" alt="Tropical architectural project by Guillan Loyola" fetchpriority="high" /><figcaption><span>01 / TROPICAL ARCHITECTURE</span><span>FORM IN DIALOGUE WITH NATURE</span></figcaption></figure>
    </section>
-   <section id="work" class="work"><div class="section-heading"><h2>Selected work<span>(01—03)</span></h2><p>Different settings.<br />One considered approach.</p></div>
+   <section id="work" class="work"><div class="section-heading"><h2>Selected work<span>({projects.map(project => project.id).join(' / ')})</span></h2><p>Different settings.<br />One considered approach.</p></div>
     {projects.map(project => <article class="project" id={`project-${project.id}`}>
      <div class="project-top"><span class="number">/{project.id}</span><h3>{project.title}</h3><span class="project-type">{project.type}</span></div>
      <div class="project-gallery" role="region" aria-roledescription="carousel" aria-label={`${project.title} gallery`}>
@@ -33,7 +34,7 @@ const projects = [
       </div>
       <div class="gallery-controls" hidden={project.images.length < 2}><div class="gallery-arrows"><button class="gallery-prev" aria-label="Previous image"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m14 7-5 5 5 5" /></svg></button><button class="gallery-next" aria-label="Next image"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m10 7 5 5-5 5" /></svg></button></div><div class="gallery-dots">{project.images.map((_, index) => <button aria-label={`Show image ${index + 1}`} aria-current={index === 0 ? 'true' : 'false'} data-slide={index}></button>)}</div><span class="gallery-count" aria-live="polite" aria-atomic="true">01 / {String(project.images.length).padStart(2, '0')}</span></div>
      </div>
-     <div class="project-bottom"><span>ARCHITECTURE / SELECTED PROJECT</span><p>{project.description}</p></div>
+     <div class="project-bottom"><span>{project.id === '05' ? 'INTERIOR DESIGN / SELECTED PROJECT' : 'ARCHITECTURE / SELECTED PROJECT'}</span><p>{project.description}</p></div>
     </article>)}
    </section>
    <section id="about" class="about"><span class="eyebrow">BEHIND THE WORK</span><div><h2 class="serif-heading" style="font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-style: normal;">A considered approach.<br />From vision to detail.</h2><p>I’m Guillan Loyola, a Senior Architect and Revit BIM Designer working as an independent contractor with US and Australian teams.</p><p>My work explores the relationship between site, space, and daily life — across tropical homes, high-end residences, and hospitality destinations.</p><div class="services"><span>Architectural design</span><span>Revit & BIM</span><span>US / AU collaboration</span></div></div></section>
