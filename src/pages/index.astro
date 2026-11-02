@@ -1,8 +1,8 @@
 ---
 const projects = [
- {id:'01', title:'Tropical Architecture', type:'Climate · Nature · Living', image:'/images/project-1.jpg', description:'Spaces shaped by the tropics. Open to the breeze, connected to greenery, and grounded in natural materials.'},
- {id:'02', title:'High-end Residentials', type:'Privacy · Proportion · Detail', image:'/images/project-2.jpg', description:'Considered homes that balance privacy with openness, bringing thoughtful spatial planning to everyday life.'},
- {id:'03', title:'Hospitality & Resort Designs', type:'Place · Experience · Escape', image:'/images/project-3.jpg', description:'Welcoming destinations where a distinct sense of place meets a thoughtful guest experience and efficient planning.'}
+ {id:'01', title:'Tropical Architecture', type:'Climate · Nature · Living', image:'/images/project-1.jpg', images:['/images/project-1.jpg'], description:'Spaces shaped by the tropics. Open to the breeze, connected to greenery, and grounded in natural materials.'},
+ {id:'02', title:'High-end Residentials', type:'Privacy · Proportion · Detail', image:'/images/project-2.jpg', images:['/images/project-2.jpg'], description:'Considered homes that balance privacy with openness, bringing thoughtful spatial planning to everyday life.'},
+ {id:'03', title:'Hospitality & Resort Designs', type:'Place · Experience · Escape', image:'/images/project-3.jpg', images:['/images/project-3.jpg'], description:'Welcoming destinations where a distinct sense of place meets a thoughtful guest experience and efficient planning.'}
 ];
 ---
 <!doctype html>
@@ -25,12 +25,16 @@ const projects = [
     <figure class="hero-image"><img src="/images/project-1.jpg" alt="Tropical architectural project by Guillan Loyola" fetchpriority="high" /><figcaption><span>01 / TROPICAL ARCHITECTURE</span><span>FORM IN DIALOGUE WITH NATURE</span></figcaption></figure>
    </section>
    <section id="work" class="work"><div class="section-heading"><h2>Selected work<span>(01—03)</span></h2><p>Different settings.<br />One considered approach.</p></div>
-    <div class="project-gallery" role="region" aria-roledescription="carousel" aria-label="Selected architectural projects">
-     <div class="gallery-track" tabindex="0" aria-label="Project slides — swipe or use left and right arrow keys">
-      {projects.map((project, index) => <article class="project" id={`project-${project.id}`} role="group" aria-roledescription="slide" aria-label={`${index + 1} of ${projects.length}: ${project.title}`}><div class="project-top"><span class="number">/{project.id}</span><h3>{project.title}</h3><span class="project-type">{project.type}</span></div><figure><img src={project.image} alt={`${project.title} — architectural visualization from Guillan Loyola’s portfolio`} loading="lazy" /><button class="expand" data-image={project.image} data-title={project.title} aria-label={`View ${project.title} image fullscreen`}>↗</button></figure><div class="project-bottom"><span>ARCHITECTURE / SELECTED PROJECT</span><p>{project.description}</p></div></article>)}
+    {projects.map(project => <article class="project" id={`project-${project.id}`}>
+     <div class="project-top"><span class="number">/{project.id}</span><h3>{project.title}</h3><span class="project-type">{project.type}</span></div>
+     <div class="project-gallery" role="region" aria-roledescription="carousel" aria-label={`${project.title} gallery`}>
+      <div class="gallery-track" tabindex={project.images.length > 1 ? 0 : undefined} aria-label="Project images">
+       {project.images.map((image, index) => <figure class="gallery-slide" role="group" aria-roledescription="slide" aria-label={`Image ${index + 1} of ${project.images.length}`}><img src={image} alt={`${project.title} — view ${index + 1}`} loading="lazy" /><button class="expand" data-image={image} data-title={project.title} aria-label={`View ${project.title} image fullscreen`}>↗</button></figure>)}
+      </div>
+      <div class="gallery-controls" hidden={project.images.length < 2}><div class="gallery-arrows"><button class="gallery-prev" aria-label="Previous image">←</button><button class="gallery-next" aria-label="Next image">→</button></div><div class="gallery-dots">{project.images.map((_, index) => <button aria-label={`Show image ${index + 1}`} aria-current={index === 0 ? 'true' : 'false'} data-slide={index}></button>)}</div><span class="gallery-count" aria-live="polite" aria-atomic="true">01 / {String(project.images.length).padStart(2, '0')}</span></div>
      </div>
-     <div class="gallery-controls"><div class="gallery-arrows"><button class="gallery-prev" aria-label="Previous project">←</button><button class="gallery-next" aria-label="Next project">→</button></div><div class="gallery-dots">{projects.map((project, index) => <button aria-label={`Show ${project.title}`} aria-current={index === 0 ? 'true' : 'false'} data-slide={index}></button>)}</div><span class="gallery-count" aria-live="polite" aria-atomic="true">01 / 03</span></div>
-    </div>
+     <div class="project-bottom"><span>ARCHITECTURE / SELECTED PROJECT</span><p>{project.description}</p></div>
+    </article>)}
    </section>
    <section id="about" class="about"><span class="eyebrow">BEHIND THE WORK</span><div><h2 class="serif-heading" style="font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-style: normal;">A considered approach.<br />From vision to detail.</h2><p>I’m Guillan Loyola, a Senior Architect and Revit BIM Designer working as an independent contractor with US and Australian teams.</p><p>My work explores the relationship between site, space, and daily life — across tropical homes, high-end residences, and hospitality destinations.</p><div class="services"><span>Architectural design</span><span>Revit & BIM</span><span>US / AU collaboration</span></div></div></section>
    <section id="contact" class="contact"><div class="eyebrow">START A CONVERSATION</div><h2 class="serif-heading" style="font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-style: normal;">Good spaces begin<br />with a connection.</h2><p>For project enquiries and collaboration, connect through my current portfolio.</p><a href="https://guiloyola.carrd.co/" target="_blank" rel="noopener noreferrer">Visit my contact page <span>↗</span></a></section>
@@ -38,40 +42,35 @@ const projects = [
   <footer><span>© {new Date().getFullYear()} Guillan Loyola</span><span>DESIGNED WITH INTENTION.</span><a href="#">Back to top ↑</a></footer>
   <dialog aria-label="Project image viewer"><button class="close" aria-label="Close image viewer">Close ×</button><img src="" alt="" /><p></p></dialog>
   <script>
-   const track = document.querySelector<HTMLElement>('.gallery-track')!;
-   const slides = Array.from(track.querySelectorAll<HTMLElement>('.project'));
-   const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-slide]'));
-   const previous = document.querySelector<HTMLButtonElement>('.gallery-prev')!;
-   const next = document.querySelector<HTMLButtonElement>('.gallery-next')!;
-   const gallery = document.querySelector<HTMLElement>('.project-gallery')!;
-   const controls = document.querySelector<HTMLElement>('.gallery-controls')!;
-   let active = 0;
-   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-   function goTo(index: number) {
-    const target = slides[Math.max(0, Math.min(index, slides.length - 1))];
-    track.scrollTo({left: target.offsetLeft - slides[0].offsetLeft, behavior: reducedMotion.matches ? 'instant' : 'smooth'});
-   }
-   function updateGallery() {
-    active = slides.reduce((best, slide, index) => Math.abs(slide.offsetLeft - slides[0].offsetLeft - track.scrollLeft) < Math.abs(slides[best].offsetLeft - slides[0].offsetLeft - track.scrollLeft) ? index : best, 0);
-    dots.forEach((dot, index) => dot.setAttribute('aria-current', String(index === active)));
-    previous.disabled = active === 0; next.disabled = active === slides.length - 1;
-    document.querySelector('.gallery-count')!.textContent = `${String(active + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
-    const imageRect = slides[active].querySelector('figure')!.getBoundingClientRect();
-    const galleryRect = gallery.getBoundingClientRect();
-    controls.style.top = `${imageRect.bottom - galleryRect.top - 60}px`;
-   }
-   previous.addEventListener('click', () => goTo(active - 1));
-   next.addEventListener('click', () => goTo(active + 1));
-   dots.forEach((dot, index) => dot.addEventListener('click', () => goTo(index)));
-   track.addEventListener('scroll', updateGallery, {passive: true});
-   track.addEventListener('keydown', event => {
-    if (event.target !== track) return;
-    if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); goTo(active + (event.key === 'ArrowRight' ? 1 : -1)); }
+   document.querySelectorAll<HTMLElement>('.project-gallery').forEach(gallery => {
+    const track = gallery.querySelector<HTMLElement>('.gallery-track')!;
+    const slides = Array.from(track.querySelectorAll<HTMLElement>('.gallery-slide'));
+    if (slides.length < 2) return;
+    const dots = Array.from(gallery.querySelectorAll<HTMLButtonElement>('[data-slide]'));
+    const previous = gallery.querySelector<HTMLButtonElement>('.gallery-prev')!;
+    const next = gallery.querySelector<HTMLButtonElement>('.gallery-next')!;
+    let active = 0;
+    function goTo(index: number) {
+     const target = slides[Math.max(0, Math.min(index, slides.length - 1))];
+     track.scrollTo({left: target.offsetLeft - slides[0].offsetLeft, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'});
+    }
+    function update() {
+     active = slides.reduce((best, slide, index) => Math.abs(slide.offsetLeft - slides[0].offsetLeft - track.scrollLeft) < Math.abs(slides[best].offsetLeft - slides[0].offsetLeft - track.scrollLeft) ? index : best, 0);
+     dots.forEach((dot, index) => dot.setAttribute('aria-current', String(index === active)));
+     previous.disabled = active === 0; next.disabled = active === slides.length - 1;
+     gallery.querySelector('.gallery-count')!.textContent = `${String(active + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+    }
+    previous.addEventListener('click', () => goTo(active - 1));
+    next.addEventListener('click', () => goTo(active + 1));
+    dots.forEach((dot, index) => dot.addEventListener('click', () => goTo(index)));
+    track.addEventListener('scroll', update, {passive: true});
+    track.addEventListener('keydown', event => {
+     if (event.target !== track) return;
+     if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); goTo(active + (event.key === 'ArrowRight' ? 1 : -1)); }
+    });
+    new ResizeObserver(() => { goTo(active); update(); }).observe(track);
+    update();
    });
-   window.addEventListener('resize', () => { goTo(active); updateGallery(); });
-   const galleryObserver = new ResizeObserver(updateGallery);
-   slides.forEach(slide => galleryObserver.observe(slide.querySelector('figure')!));
-   updateGallery();
    const viewer = document.querySelector('dialog')!;
    document.querySelectorAll<HTMLButtonElement>('.expand').forEach(button => button.addEventListener('click', () => {
     const image = viewer.querySelector('img')!;
@@ -97,4 +96,5 @@ header nav{align-items:baseline;padding-top:2px;min-height:0;line-height:1.2}hea
 .project-gallery{position:relative;padding-bottom:70px}.gallery-controls{position:absolute;left:16px;right:16px;top:300px;height:44px;padding:0;z-index:2;pointer-events:none;gap:12px}.gallery-controls button{pointer-events:auto}.gallery-arrows{gap:8px}.gallery-arrows button,.gallery-dots,.gallery-count{background:rgba(28,36,29,.38);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;border:1px solid rgba(255,255,255,.45);box-shadow:inset 0 1px rgba(255,255,255,.2),0 2px 10px #0001}.gallery-arrows button{width:40px;height:40px}.gallery-arrows button:disabled{opacity:.45}.gallery-arrows button:not(:disabled):hover{background:rgba(28,36,29,.7)}.gallery-dots{position:absolute;left:50%;transform:translateX(-50%);display:flex;border-radius:24px;padding:0 5px;pointer-events:auto}.gallery-dots button{padding:12px 8px}.gallery-dots button::after{width:6px;height:6px;background:transparent;border:1px solid #fff}.gallery-dots button[aria-current=true]::after{background:#fff}.gallery-count{min-width:0;border-radius:24px;padding:9px 12px;font-size:9px;margin-left:auto}.project .expand{top:16px;bottom:auto;right:16px;background:rgba(28,36,29,.38);color:#fff;border:1px solid #ffffff73;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 @media(max-width:650px){.project-gallery{padding-bottom:50px}.gallery-controls{padding:0}.gallery-dots button{padding:12px 7px}}
 @media(max-width:440px){header nav{padding-top:0;align-items:baseline}.gallery-controls{left:12px;right:12px}.gallery-arrows{gap:6px}.gallery-arrows button{width:36px;height:36px}.gallery-count{font-size:8px;padding:8px}.gallery-dots button{padding:11px 6px}}
+.work>.project{width:100%;margin:0 0 70px}.project-gallery{padding-bottom:0}.gallery-slide{flex:0 0 100%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always}.project-gallery .gallery-controls{top:auto;bottom:16px;padding:0}.gallery-controls[hidden]{display:none}@media(max-width:650px){.project-gallery{padding-bottom:0}.work>.project{margin-bottom:50px}}
 </style>
