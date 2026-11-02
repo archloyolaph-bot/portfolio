@@ -29,7 +29,7 @@ const projects = [
      <div class="project-top"><span class="number">/{project.id}</span><h3>{project.title}</h3><span class="project-type">{project.type}</span></div>
      <div class="project-gallery" role="region" aria-roledescription="carousel" aria-label={`${project.title} gallery`}>
       <div class="gallery-track" tabindex={project.images.length > 1 ? 0 : undefined} aria-label="Project images">
-       {project.images.map((image, index) => <figure class="gallery-slide" role="group" aria-roledescription="slide" aria-label={`Image ${index + 1} of ${project.images.length}`}><img src={image} alt={`${project.title} — view ${index + 1}`} loading="lazy" /><button class="expand" data-image={image} data-title={project.title} aria-label={`View ${project.title} image fullscreen`}>↗</button></figure>)}
+       {project.images.map((image, index) => <figure class="gallery-slide" role="group" aria-roledescription="slide" aria-label={`Image ${index + 1} of ${project.images.length}`}><img src={image} alt={`${project.title} — view ${index + 1}`} loading="lazy" /></figure>)}
       </div>
       <div class="gallery-controls" hidden={project.images.length < 2}><div class="gallery-arrows"><button class="gallery-prev" aria-label="Previous image"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m14 7-5 5 5 5" /></svg></button><button class="gallery-next" aria-label="Next image"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m10 7 5 5-5 5" /></svg></button></div><div class="gallery-dots">{project.images.map((_, index) => <button aria-label={`Show image ${index + 1}`} aria-current={index === 0 ? 'true' : 'false'} data-slide={index}></button>)}</div><span class="gallery-count" aria-live="polite" aria-atomic="true">01 / {String(project.images.length).padStart(2, '0')}</span></div>
      </div>
@@ -40,7 +40,6 @@ const projects = [
    <section id="contact" class="contact"><div class="eyebrow">START A CONVERSATION</div><h2 class="serif-heading" style="font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-style: normal;">Good spaces begin<br />with a connection.</h2><p>For project enquiries and collaboration, connect through my current portfolio.</p><a href="https://guiloyola.carrd.co/" target="_blank" rel="noopener noreferrer">Visit my contact page <span>↗</span></a></section>
   </main>
   <footer><span>© {new Date().getFullYear()} Guillan Loyola</span><span>DESIGNED WITH INTENTION.</span><a href="#">Back to top ↑</a></footer>
-  <dialog aria-label="Project image viewer"><button class="close" aria-label="Close image viewer">Close ×</button><img src="" alt="" /><p></p></dialog>
   <script>
    document.querySelectorAll<HTMLElement>('.project-gallery').forEach(gallery => {
     const track = gallery.querySelector<HTMLElement>('.gallery-track')!;
@@ -71,15 +70,6 @@ const projects = [
     new ResizeObserver(() => { goTo(active); update(); }).observe(track);
     update();
    });
-   const viewer = document.querySelector('dialog')!;
-   document.querySelectorAll<HTMLButtonElement>('.expand').forEach(button => button.addEventListener('click', () => {
-    const image = viewer.querySelector('img')!;
-    image.src = button.dataset.image!; image.alt = button.dataset.title!;
-    viewer.querySelector('p')!.textContent = button.dataset.title!;
-    viewer.showModal();
-   }));
-   viewer.querySelector('button')!.addEventListener('click', () => viewer.close());
-   viewer.addEventListener('click', event => { if (event.target === viewer) viewer.close(); });
   </script>
  </body>
 </html>
