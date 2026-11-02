@@ -43,6 +43,8 @@ const projects = [
    const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-slide]'));
    const previous = document.querySelector<HTMLButtonElement>('.gallery-prev')!;
    const next = document.querySelector<HTMLButtonElement>('.gallery-next')!;
+   const gallery = document.querySelector<HTMLElement>('.project-gallery')!;
+   const controls = document.querySelector<HTMLElement>('.gallery-controls')!;
    let active = 0;
    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
    function goTo(index: number) {
@@ -54,6 +56,9 @@ const projects = [
     dots.forEach((dot, index) => dot.setAttribute('aria-current', String(index === active)));
     previous.disabled = active === 0; next.disabled = active === slides.length - 1;
     document.querySelector('.gallery-count')!.textContent = `${String(active + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+    const imageRect = slides[active].querySelector('figure')!.getBoundingClientRect();
+    const galleryRect = gallery.getBoundingClientRect();
+    controls.style.top = `${imageRect.bottom - galleryRect.top - 60}px`;
    }
    previous.addEventListener('click', () => goTo(active - 1));
    next.addEventListener('click', () => goTo(active + 1));
@@ -63,7 +68,9 @@ const projects = [
     if (event.target !== track) return;
     if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); goTo(active + (event.key === 'ArrowRight' ? 1 : -1)); }
    });
-   window.addEventListener('resize', () => goTo(active));
+   window.addEventListener('resize', () => { goTo(active); updateGallery(); });
+   const galleryObserver = new ResizeObserver(updateGallery);
+   slides.forEach(slide => galleryObserver.observe(slide.querySelector('figure')!));
    updateGallery();
    const viewer = document.querySelector('dialog')!;
    document.querySelectorAll<HTMLButtonElement>('.expand').forEach(button => button.addEventListener('click', () => {
@@ -85,4 +92,9 @@ header{align-items:flex-start}.brand{flex-shrink:0}.brand .brand-name{font-size:
 .gallery-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;position:relative;overscroll-behavior-x:contain;gap:28px}.gallery-track::-webkit-scrollbar{display:none}.gallery-track .project{flex:0 0 100%;width:100%;min-width:0;margin:0;scroll-snap-align:start;scroll-snap-stop:always}.gallery-controls{display:flex;justify-content:space-between;align-items:center;padding:28px 0 70px}.gallery-arrows{display:flex;gap:10px}.gallery-arrows button{border:1px solid #9b9f91;background:transparent;border-radius:50%;width:40px;height:40px;font-size:20px}.gallery-arrows button:disabled{opacity:.3;cursor:default}.gallery-arrows button:not(:disabled):hover{background:#d6dccb}.gallery-dots{display:flex;gap:3px}.gallery-dots button{border:0;padding:12px;background:none}.gallery-dots button::after{content:'';display:block;width:7px;height:7px;border-radius:50%;background:#b7bcae}.gallery-dots button[aria-current=true]::after{background:#2c342b}.gallery-count{font-size:10px;letter-spacing:.12em;min-width:85px;text-align:right}.gallery-track:focus-visible{outline:2px solid #a36a38;outline-offset:4px}
 @media(max-width:650px){header{flex-wrap:wrap;gap:22px}.brand .brand-name{font-size:26px}.brand .brand-subtitle{font-size:7px}header nav{min-height:26px;gap:16px}nav a:nth-child(2){display:block}.gallery-controls{padding-bottom:50px}}
 @media(max-width:440px){header nav{width:100%;justify-content:space-between}.gallery-count{min-width:70px}}
+.about h2,.contact h2{font-family:'Libre Caslon Display',Georgia,serif;letter-spacing:-.035em}.about h2 em,.contact h2 em{font:inherit}
+header nav{align-items:baseline;padding-top:2px;min-height:0;line-height:1.2}header nav>a{position:relative;display:block;line-height:1.2;white-space:nowrap}header nav span{position:absolute;top:-.45em;right:-13px;font-size:8px;margin:0;line-height:1}
+.project-gallery{position:relative;padding-bottom:70px}.gallery-controls{position:absolute;left:16px;right:16px;top:300px;height:44px;padding:0;z-index:2;pointer-events:none;gap:12px}.gallery-controls button{pointer-events:auto}.gallery-arrows{gap:8px}.gallery-arrows button,.gallery-dots,.gallery-count{background:rgba(28,36,29,.38);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;border:1px solid rgba(255,255,255,.45);box-shadow:inset 0 1px rgba(255,255,255,.2),0 2px 10px #0001}.gallery-arrows button{width:40px;height:40px}.gallery-arrows button:disabled{opacity:.45}.gallery-arrows button:not(:disabled):hover{background:rgba(28,36,29,.7)}.gallery-dots{position:absolute;left:50%;transform:translateX(-50%);display:flex;border-radius:24px;padding:0 5px;pointer-events:auto}.gallery-dots button{padding:12px 8px}.gallery-dots button::after{width:6px;height:6px;background:transparent;border:1px solid #fff}.gallery-dots button[aria-current=true]::after{background:#fff}.gallery-count{min-width:0;border-radius:24px;padding:9px 12px;font-size:9px;margin-left:auto}.project .expand{top:16px;bottom:auto;right:16px;background:rgba(28,36,29,.38);color:#fff;border:1px solid #ffffff73;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+@media(max-width:650px){.project-gallery{padding-bottom:50px}.gallery-controls{padding:0}.gallery-dots button{padding:12px 7px}}
+@media(max-width:440px){header nav{padding-top:0;align-items:baseline}.gallery-controls{left:12px;right:12px}.gallery-arrows{gap:6px}.gallery-arrows button{width:36px;height:36px}.gallery-count{font-size:8px;padding:8px}.gallery-dots button{padding:11px 6px}}
 </style>
